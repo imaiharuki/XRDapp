@@ -106,7 +106,7 @@ function GraphComponent({ datasets, onClear, xMax, xMin }: GraphProps) {
           type: "logarithmic" as const,
           title: {
             display: true,
-            text: "強度 (任意単位)",
+            text: "強度",
           },
           ticks: {
             display: false, // Y軸の数値を非表示

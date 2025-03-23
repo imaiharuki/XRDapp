@@ -1,18 +1,12 @@
+"use client";
+
 import { XRDDataset } from "@/app/page";
 import React from "react";
 import { Button } from "./ui/button";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "./ui/sheet";
+
+import UploadForm from "./UploadForm";
 
 const Filelist = ({
   datasets,
@@ -46,25 +40,7 @@ const Filelist = ({
             </Button>
           </div>
           <div className="ml-2">
-            <Sheet>
-              <SheetTrigger>
-                <Button variant={"outline"}>Upload</Button>
-              </SheetTrigger>
-              <SheetContent>
-                <SheetHeader>
-                  <SheetTitle>Upload XRD file</SheetTitle>
-                  <SheetDescription>
-                    アップロードするXRDファイルの情報を追加してください
-                  </SheetDescription>
-                </SheetHeader>
-
-                <SheetFooter>
-                  <SheetClose asChild>
-                    <Button type="submit">Upload</Button>
-                  </SheetClose>
-                </SheetFooter>
-              </SheetContent>
-            </Sheet>
+            <UploadForm />
           </div>
         </div>
       ))}
