@@ -26,6 +26,7 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { MultiSelect } from "./MultiSelect";
+import { XRDDataset } from "@/app/page";
 
 const FormSchema = z.object({
   username: z.string().min(1, {
@@ -54,7 +55,7 @@ const FormSchema = z.object({
     }),
 });
 
-const UploadForm = () => {
+const UploadForm = ({ dataset }: { dataset: XRDDataset }) => {
   const today = new Date();
   // 日本時間に変換
   const jstDate = new Date(today.getTime() + 9 * 60 * 60 * 1000);
@@ -71,13 +72,37 @@ const UploadForm = () => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof FormSchema>) => {
+  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
       console.log("送信開始");
       console.log("フォームデータ:", data);
-      console.log("送信完了");
+
+      // XRDデータセットと送信データを結合
+      const submitData = {
+        ...data,
+        xrdData: dataset,
+      };
+
+      // APIエンドポイントにPOSTリクエストを送信
+      const response = await fetch("https://localhost:8000/api/upload", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(submitData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`エラー: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log("送信完了:", result);
+
+      // 成功時の処理（例: ダイアログを閉じる、成功メッセージを表示するなど）
     } catch (error) {
       console.error("エラーが発生しました:", error);
+      // エラー処理（例: エラーメッセージを表示するなど）
     }
   };
 

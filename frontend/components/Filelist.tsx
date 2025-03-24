@@ -40,7 +40,7 @@ const Filelist = ({
             </Button>
           </div>
           <div className="ml-2">
-            <UploadForm />
+            <UploadForm dataset={dataset} />
           </div>
         </div>
       ))}
