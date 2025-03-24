@@ -15,3 +15,7 @@ app.add_middleware(
 @app.get("/message")
 async def read_root():
     return {"message": "Welcome to XRD Data Analysis API"} 
+
+@app.get("/")
+async def read_item():
+    return {"item":10}

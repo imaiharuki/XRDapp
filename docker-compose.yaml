@@ -32,7 +32,21 @@ services:
       - PYTHONPATH=/app
     restart: unless-stopped
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+  db:
+    image: postgres:15.0
+    container_name: postgresdb
+    environment:
+      POSTGRES_USER: "imaiharuki"
+      POSTGRES_PASSWORD: "kklab"
+      POSTGRES_DB: "xrd"
+      TZ: "Asia/Tokyo"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
 
+volumes:
+  postgres_data:
   # 必要に応じてデータベースなどの他のサービスを追加できます
   # 例：
   # db:
