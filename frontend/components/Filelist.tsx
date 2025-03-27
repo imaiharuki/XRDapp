@@ -24,11 +24,8 @@ const Filelist = ({
       )}
     >
       {datasets.map((dataset: XRDDataset) => (
-        <div className="flex items-center justify-between">
-          <div
-            key={dataset.id}
-            className="flex items-center bg-gray-100 rounded-full px-3 py-1 justify-between"
-          >
+        <div key={dataset.id} className="flex items-center justify-between">
+          <div className="flex items-center bg-gray-100 rounded-full px-3 py-1 justify-between">
             <span className="text-sm">{dataset.fileName}</span>
             <Button
               variant="ghost"
