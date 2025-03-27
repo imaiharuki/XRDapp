@@ -1,13 +1,12 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
-from datetime import date
+from datetime import datetime
 
 
 class XRDDataBase(BaseModel):
     """基本的なXRDデータスキーマ"""
 
     username: str = Field(..., description="ユーザー名")
-    upload_date: date = Field(..., description="アップロード日")
     material: str = Field(..., description="材料名")
     elements: List[str] = Field(..., description="含まれる元素のリスト")
     temperature: float = Field(..., ge=0, description="測定温度")
@@ -28,6 +27,7 @@ class XRDDataResponse(XRDDataBase):
     """XRDデータレスポンス用スキーマ"""
 
     id: int = Field(..., description="XRDデータのID")
+    upload_date: datetime = Field(..., description="アップロード日")
 
     class Config:
         orm_mode = True
@@ -38,7 +38,6 @@ class XRDDataUpdate(BaseModel):
     """XRDデータ更新用スキーマ"""
 
     username: Optional[str] = None
-    upload_date: Optional[date] = None
     material: Optional[str] = None
     elements: Optional[List[str]] = None
     temperature: Optional[float] = Field(None, ge=0)

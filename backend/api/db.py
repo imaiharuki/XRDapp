@@ -12,7 +12,7 @@ load_dotenv(dotenv_path)
 
 ASYNC_DB_URL = os.environ["DATABASE_URL"]
 
-print("Database URL : ", ASYNC_DB_URL)
+
 async_engine = create_async_engine(ASYNC_DB_URL, echo=True)
 
 async_session = sessionmaker(

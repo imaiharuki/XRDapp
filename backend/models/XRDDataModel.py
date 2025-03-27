@@ -1,6 +1,6 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Float, ARRAY, Date
-from sqlalchemy.dialects.postgresql import JSONB
-from datetime import date
+from sqlalchemy import Column, Integer, String, ForeignKey, Float, ARRAY, DateTime
+from sqlalchemy.dialects.postgresql import JSONB, TIMESTAMP
+from datetime import datetime, timedelta
 
 from api.db import Base
 
@@ -12,7 +12,11 @@ class XRD_data(Base):
 
     # UploadFormから送信されるユーザー情報
     username = Column(String(255), nullable=False)
-    upload_date = Column(Date, nullable=False, default=date.today)
+    upload_date = Column(
+        TIMESTAMP(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now() + timedelta(hours=9),
+    )
 
     # 材料情報
     material = Column(String(255), nullable=False)
