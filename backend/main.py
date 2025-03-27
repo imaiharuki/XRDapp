@@ -2,7 +2,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import XRDData
 
-app = FastAPI()
+app = FastAPI(
+    title="XRD Data Analysis API",
+    version="1.0.0",
+    description="XRDデータ格納、解析のためのRESTfulAPI",
+)
 
 # CORSミドルウェアの設定
 app.add_middleware(
@@ -17,6 +21,7 @@ app.add_middleware(
 app.include_router(XRDData.router, prefix="/api/v1", tags=["XRD Data"])
 
 
-@app.get("/message")
-async def read_root():
-    return {"message": "Welcome to XRD Data Analysis API"}
+@app.get("/health")
+async def health_check():
+    "ヘルスチェック用のエンドポイント"
+    return {"status": "healthy", "version": "1.0.0"}
