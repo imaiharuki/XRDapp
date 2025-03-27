@@ -6,6 +6,8 @@ import { Graph } from "@/components/Graph";
 import { parseXRDFile } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import Filelist from "@/components/Filelist";
+import DataRender from "@/components/DataTable/Render";
+import { FetchXRDData } from "@/components/DataTable/columns";
 
 export interface XRDDataset {
   id: string;
@@ -58,6 +60,12 @@ export default function Home() {
     }
   };
 
+  const handleDataUpload = ({ fileName, data }: XRDDataset) => {
+    const id = crypto.randomUUID();
+
+    setDatasets((prev) => [...prev, { id, fileName, data }]);
+  };
+
   const handleRemoveDataset = (id: string) => {
     setDatasets((prev) => prev.filter((dataset) => dataset.id !== id));
   };
@@ -91,6 +99,7 @@ export default function Home() {
           <div className="flex flex-wrap justify-center gap-2 max-w-2xl">
             <Filelist datasets={datasets} onRemove={handleRemoveDataset} />
           </div>
+          <DataRender onDataSelect={handleDataUpload} />
         </div>
       </header>
 

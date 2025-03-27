@@ -132,7 +132,7 @@ function GraphComponent({ datasets, onClear, xMax, xMin }: GraphProps) {
   return (
     <div className="bg-white p-4 rounded-lg shadow-md">
       <div className="flex justify-end mb-4">
-        <Button size="sm" onClick={onClear} variant={"default"}>
+        <Button size="sm" onClick={onClear} variant={"destructive"}>
           データを消去
         </Button>
       </div>

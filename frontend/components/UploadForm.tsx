@@ -200,7 +200,7 @@ const UploadForm = ({ dataset }: { dataset: XRDDataset }) => {
               name="temperature"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>温度</FormLabel>
+                  <FormLabel>温度 [K]</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
