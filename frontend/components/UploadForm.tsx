@@ -101,7 +101,7 @@ const UploadForm = ({ dataset }: { dataset: XRDDataset }) => {
 
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button variant={"outline"}>Upload</Button>
       </DialogTrigger>
       <DialogContent>
