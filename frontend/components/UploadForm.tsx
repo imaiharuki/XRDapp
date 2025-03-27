@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -39,7 +39,7 @@ const FormSchema = z.object({
   material: z.string().min(1, {
     message: "材料名を入力してください",
   }),
-  tempareture: z
+  temperature: z
     .number({
       required_error: "温度を入力してください",
       invalid_type_error: "温度は数値で入力してください",
@@ -50,57 +50,83 @@ const FormSchema = z.object({
 });
 
 const UploadForm = ({ dataset }: { dataset: XRDDataset }) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       username: "",
       material: "",
       elements: [],
-      tempareture: 0,
+      temperature: 0,
     },
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
+      setIsSubmitting(true);
       console.log("送信開始");
-      console.log("フォームデータ:", data);
 
       // XRDデータセットと送信データを結合
       const submitData = {
         username: data.username,
         material: data.material,
         elements: data.elements,
-        tempareture: data.tempareture,
+        temperature: data.temperature,
         x_value: dataset.data.x,
         y_value: dataset.data.y,
       };
 
+      console.log("フォームデータ:", submitData);
+
       // APIエンドポイントにPOSTリクエストを送信
-      const response = await fetch("https://localhost:8000/api/v1/upload", {
+      const response = await fetch("http://localhost:8000/api/v1/upload", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
         },
         body: JSON.stringify(submitData),
+        credentials: "include",
       });
 
       if (!response.ok) {
-        throw new Error(`エラー: ${response.status}`);
+        const errorData = await response.json();
+        console.error("サーバーエラー詳細:", errorData);
+        throw new Error(
+          typeof errorData === "object"
+            ? JSON.stringify(errorData, null, 2)
+            : `エラー: ${response.status} - ${response.statusText}`
+        );
       }
 
       const result = await response.json();
-      console.log("response:", response);
       console.log("送信完了:", result);
 
-      // 成功時の処理（例: ダイアログを閉じる、成功メッセージを表示するなど）
+      // 成功時の処理
+      form.reset(); // フォームをリセット
+      setIsOpen(false); // ダイアログを閉じる
+      // TODO: 成功メッセージをトースト通知などで表示
     } catch (error) {
       console.error("エラーが発生しました:", error);
-      // エラー処理（例: エラーメッセージを表示するなど）
+      let errorMessage = "不明なエラーが発生しました";
+
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (error && typeof error === "object") {
+        errorMessage = JSON.stringify(error, null, 2);
+      }
+
+      console.error("エラー詳細:", errorMessage);
+      // TODO: エラーメッセージをUIに表示
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant={"outline"}>Upload</Button>
       </DialogTrigger>
@@ -116,7 +142,6 @@ const UploadForm = ({ dataset }: { dataset: XRDDataset }) => {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-
               form.handleSubmit(onSubmit)(e);
             }}
             className="space-y-4"
@@ -172,7 +197,7 @@ const UploadForm = ({ dataset }: { dataset: XRDDataset }) => {
             />
             <FormField
               control={form.control}
-              name="tempareture"
+              name="temperature"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>温度</FormLabel>
@@ -196,7 +221,9 @@ const UploadForm = ({ dataset }: { dataset: XRDDataset }) => {
             />
 
             <DialogFooter>
-              <Button type="submit">Upload</Button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "送信中..." : "Upload"}
+              </Button>
             </DialogFooter>
           </form>
         </Form>
