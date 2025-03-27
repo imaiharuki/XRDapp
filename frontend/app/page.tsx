@@ -10,7 +10,7 @@ import Filelist from "@/components/Filelist";
 export interface XRDDataset {
   id: string;
   fileName: string;
-  data: { x: number; y: number }[];
+  data: { x: number[]; y: number[] };
 }
 
 export default function Home() {

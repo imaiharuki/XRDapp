@@ -32,13 +32,7 @@ const FormSchema = z.object({
   username: z.string().min(1, {
     message: "名前を入力してください",
   }),
-  date: z
-    .string({
-      required_error: "日時を入力してください",
-    })
-    .min(1, {
-      message: "日時を入力してください",
-    }),
+
   elements: z.array(z.enum(ElementsList)).min(1, {
     message: "少なくとも1つの元素を選択してください",
   }),
@@ -56,16 +50,10 @@ const FormSchema = z.object({
 });
 
 const UploadForm = ({ dataset }: { dataset: XRDDataset }) => {
-  const today = new Date();
-  // 日本時間に変換
-  const jstDate = new Date(today.getTime() + 9 * 60 * 60 * 1000);
-  const formattedDate = jstDate.toISOString().slice(0, 10); // YYYY-MM-DD形式
-
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       username: "",
-      date: formattedDate,
       material: "",
       elements: [],
       tempareture: undefined,
@@ -79,12 +67,16 @@ const UploadForm = ({ dataset }: { dataset: XRDDataset }) => {
 
       // XRDデータセットと送信データを結合
       const submitData = {
-        ...data,
-        xrdData: dataset,
+        username: data.username,
+        material: data.material,
+        elements: data.elements,
+        tempareture: data.tempareture,
+        x_value: dataset.data.x,
+        y_value: dataset.data.y,
       };
 
       // APIエンドポイントにPOSTリクエストを送信
-      const response = await fetch("https://localhost:8000/api/upload", {
+      const response = await fetch("https://localhost:8000/api/v1/upload", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -97,6 +89,7 @@ const UploadForm = ({ dataset }: { dataset: XRDDataset }) => {
       }
 
       const result = await response.json();
+      console.log("response:", response);
       console.log("送信完了:", result);
 
       // 成功時の処理（例: ダイアログを閉じる、成功メッセージを表示するなど）
@@ -141,20 +134,7 @@ const UploadForm = ({ dataset }: { dataset: XRDDataset }) => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="date"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>日時</FormLabel>
-                  <FormControl>
-                    <Input placeholder="日時" {...field} type="date" />
-                  </FormControl>
-                  <FormDescription></FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
             <FormField
               control={form.control}
               name="elements"

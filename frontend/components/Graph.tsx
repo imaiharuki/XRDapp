@@ -13,6 +13,7 @@ import {
   Legend,
 } from "chart.js";
 import React, { useMemo } from "react";
+import { XRDDataset } from "@/app/page";
 
 // Chart.jsの登録
 ChartJS.register(
@@ -25,14 +26,6 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
-interface XRDDataset {
-  id: string;
-  fileName: string;
-  data: { x: number; y: number }[];
-  xMin?: number;
-  xMax?: number;
-}
 
 interface GraphProps {
   datasets: XRDDataset[];
@@ -74,9 +67,9 @@ function GraphComponent({ datasets, onClear, xMax, xMin }: GraphProps) {
         const offset = calculateOffset(index);
         return {
           label: `XRDデータ - ${dataset.fileName}`,
-          data: dataset.data.map((point) => ({
-            x: point.x,
-            y: point.y * offset,
+          data: Array.from({ length: dataset.data.x.length }, (_, i) => ({
+            x: dataset.data.x[i],
+            y: dataset.data.y[i] * offset,
           })),
           borderColor: color,
           backgroundColor: color.replace("rgb", "rgba").replace(")", ", 0.2)"),
