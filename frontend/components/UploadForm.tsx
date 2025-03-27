@@ -56,7 +56,7 @@ const UploadForm = ({ dataset }: { dataset: XRDDataset }) => {
       username: "",
       material: "",
       elements: [],
-      tempareture: undefined,
+      tempareture: 0,
     },
   });
 
@@ -181,7 +181,10 @@ const UploadForm = ({ dataset }: { dataset: XRDDataset }) => {
                       type="number"
                       placeholder="温度"
                       {...field}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        field.onChange(value === "" ? 0 : Number(value));
+                      }}
                     />
                   </FormControl>
                   <FormDescription>

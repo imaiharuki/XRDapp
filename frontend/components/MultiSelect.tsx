@@ -72,33 +72,34 @@ export function MultiSelect({
           <div className="flex flex-wrap gap-1">
             {selected.length > 0 ? (
               selected.map((item) => (
-                <Badge
-                  variant="secondary"
-                  key={item}
-                  className="mr-1 mb-1"
-                  onClick={() => handleUnselect(item)}
-                >
-                  {item}
-                  <button
-                    className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        handleUnselect(item);
-                      }
-                    }}
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                    }}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handleUnselect(item);
-                    }}
+                <div key={item} className="flex items-center gap-1">
+                  <div
+                    className={cn(
+                      "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold",
+                      "border-transparent bg-secondary text-secondary-foreground"
+                    )}
                   >
-                    <X className="h-3 w-3" />
-                  </button>
-                </Badge>
+                    {item}
+                    <span
+                      role="button"
+                      tabIndex={0}
+                      className="ml-1 cursor-pointer"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleUnselect(item);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handleUnselect(item);
+                        }
+                      }}
+                    >
+                      <X className="h-3 w-3" />
+                    </span>
+                  </div>
+                </div>
               ))
             ) : (
               <span className="text-muted-foreground">{placeholder}</span>
