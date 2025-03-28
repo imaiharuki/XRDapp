@@ -47,20 +47,3 @@ services:
 
 volumes:
   postgres_data:
-  # 必要に応じてデータベースなどの他のサービスを追加できます
-  # 例：
-  # db:
-  #   image: postgres:13
-  #   container_name: postgres-db
-  #   ports:
-  #     - "5432:5432"
-  #   environment:
-  #     - POSTGRES_USER=postgres
-  #     - POSTGRES_PASSWORD=postgres
-  #     - POSTGRES_DB=app_db
-  #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data
-  #   restart: unless-stopped
-# 必要に応じてボリュームを定義
-# volumes:
-#   postgres_data:
