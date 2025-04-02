@@ -102,9 +102,12 @@ const DataRender = ({ onDataSelect }: DataRenderProps) => {
             <div className="text-center">データを読み込み中...</div>
           ) : (
             <DataTable
-              columns={columns({ onDataSelect })}
+              columns={columns({
+                onDataSelect,
+                onDelete: fetchData,
+                onUpdate: fetchData,
+              })}
               data={data}
-              onDataSelect={onDataSelect}
             />
           )}
         </div>

@@ -73,3 +73,32 @@ export const EXCELexporter = (data: FetchXRDData) => {
     }K.xlsx`
   );
 };
+
+export const DeleteData = async (dataId: number) => {
+  try {
+    const response = await fetch(
+      `http://localhost:8000/api/v1/delete?id=${dataId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Accept: "application/json",
+        },
+        credentials: "include",
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(
+        typeof errorData === "object"
+          ? JSON.stringify(errorData, null, 2)
+          : `エラー: ${response.status} - ${response.statusText}`
+      );
+    }
+
+    return true; // 削除成功
+  } catch (error) {
+    console.error("データの削除に失敗しました:", error);
+    throw error;
+  }
+};

@@ -20,13 +20,11 @@ import { XRDDataset } from "@/app/page";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  onDataSelect: (data: XRDDataset) => void;
 }
 
 export default function DataTable<TData, TValue>({
   columns,
   data,
-  onDataSelect,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,

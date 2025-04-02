@@ -79,11 +79,13 @@ from datetime import datetime
 
 # CRUDのU
 async def get_data(db: AsyncSession, id: int) -> Optional[XRD_data]:
-    result: Result = await db.execute(select(XRD_data).filter(XRD_data.id == id))
-    data: Optional[Tuple[XRD_data]] = result.first()
-    print("Output data : ", data)
-    print("Output data[0] : ", data[0])
-    return data[0] if data is not None else None
+    try:
+        result: Result = await db.execute(select(XRD_data).filter(XRD_data.id == id))
+        data = result.scalar_one_or_none()
+        return data
+    except Exception as e:
+        print(f"Error in get_data: {str(e)}")
+        return None
 
 
 async def update_data(

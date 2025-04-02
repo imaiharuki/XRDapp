@@ -35,6 +35,18 @@ async def get_xrd_data(
     return await read_data(db, id, username, material, elements)
 
 
+@router.get("/identity_check", response_model=bool)
+async def identity_check(
+    id: int = Query(..., description="同じidのデータがあるかどうか確認"),
+    db: AsyncSession = Depends(get_db),
+) -> bool:
+    flag = await get_data(db=db, id=id)
+    if flag is None:
+        return False
+    else:
+        return True
+
+
 @router.put("/update", response_model=XRDDataResponse)
 async def update_xrd_data(
     data: XRDDataCreate,

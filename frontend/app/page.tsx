@@ -7,10 +7,17 @@ import { parseXRDFile } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import Filelist from "@/components/Filelist";
 import DataRender from "@/components/DataTable/Render";
-import { FetchXRDData } from "@/components/DataTable/columns";
+
+// ここの実装
+// 本来はクライアント側で与えられるstringのidと
+// データベースで与えられるnumberのidを分割する必要がある
+// データベースのスキーマ変更とマイグレーションが面倒でやっていないが、不都合が起きたら変更する
+// 現状、idがstringのデータはクライアントからサーバーに送っていないデータ
+// idがnumberのデータはサーバーから渡されたデータ
+// 本来管理するidはstringのid
 
 export interface XRDDataset {
-  id: string;
+  id: string | number;
   fileName: string;
   data: { x: number[]; y: number[] };
 }
@@ -60,13 +67,11 @@ export default function Home() {
     }
   };
 
-  const handleDataUpload = ({ fileName, data }: XRDDataset) => {
-    const id = crypto.randomUUID();
-
+  const handleDataUpload = ({ id, fileName, data }: XRDDataset) => {
     setDatasets((prev) => [...prev, { id, fileName, data }]);
   };
 
-  const handleRemoveDataset = (id: string) => {
+  const handleRemoveDataset = (id: string | number) => {
     setDatasets((prev) => prev.filter((dataset) => dataset.id !== id));
   };
 

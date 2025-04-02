@@ -11,8 +11,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
-import { EXCELexporter } from "@/lib/utils";
+import { DeleteData, EXCELexporter } from "@/lib/utils";
 import { XRDDataset } from "@/app/page";
+import UploadForm from "../UploadForm";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
 
 export interface FetchXRDData {
   id: number;
@@ -27,10 +34,14 @@ export interface FetchXRDData {
 
 interface ColumnProps {
   onDataSelect: (data: XRDDataset) => void;
+  onDelete?: () => void;
+  onUpdate?: () => void;
 }
 
 export const columns = ({
   onDataSelect,
+  onDelete,
+  onUpdate,
 }: ColumnProps): ColumnDef<FetchXRDData>[] => [
   {
     accessorKey: "material",
@@ -68,21 +79,31 @@ export const columns = ({
     cell: ({ row }) => {
       const data = row.original;
 
-      const handleSelect = () => {
-        const FormattedDate = new Date(data.upload_date)
-          .toISOString()
-          .slice(0, 10)
-          .replace(/-/g, "");
+      const FormattedDate = new Date(data.upload_date)
+        .toISOString()
+        .slice(0, 10)
+        .replace(/-/g, "");
 
-        const dataset: XRDDataset = {
-          id: crypto.randomUUID(),
-          fileName: `${data.username}_${data.material}_${FormattedDate}_${data.temperature}K`,
-          data: {
-            x: data.x_value,
-            y: data.y_value,
-          },
-        };
+      const dataset: XRDDataset = {
+        id: data.id,
+        fileName: `${data.username}_${data.material}_${FormattedDate}_${data.temperature}K`,
+        data: {
+          x: data.x_value,
+          y: data.y_value,
+        },
+      };
+
+      const handleSelect = () => {
         onDataSelect(dataset);
+      };
+
+      const handleDelete = async () => {
+        try {
+          await DeleteData(data.id);
+          onDelete?.();
+        } catch (error) {
+          console.error("削除に失敗しました:", error);
+        }
       };
 
       return (
@@ -96,7 +117,6 @@ export const columns = ({
           <DropdownMenuContent align="end">
             <DropdownMenuItem
               onClick={handleSelect}
-              //   ボタンが押された後にtoastを追加する
               className="text-blue-600 justify-center font-bold"
             >
               SELECT
@@ -112,14 +132,16 @@ export const columns = ({
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => console.log("edit")}
-              className="text-gray-600 justify-center font-bold"
+              className="text-gray-600 font-bold "
+              onClick={(e) => {
+                e.preventDefault();
+              }}
             >
-              EDIT
+              <UploadForm dataset={dataset} type="EDIT" onUpdate={onUpdate} />
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => console.log("delete")}
+              onClick={handleDelete}
               className="text-red-600 justify-center font-bold"
             >
               DELETE

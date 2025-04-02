@@ -13,7 +13,7 @@ const Filelist = ({
   onRemove,
 }: {
   datasets: XRDDataset[];
-  onRemove: (id: string) => void;
+  onRemove: (id: string | number) => void;
 }) => {
   return (
     // datasetがないときはborderを消したい
@@ -27,6 +27,7 @@ const Filelist = ({
         <div key={dataset.id} className="flex items-center justify-between">
           <div className="flex items-center bg-gray-100 rounded-full px-3 py-1 justify-between">
             <span className="text-sm">{dataset.fileName}</span>
+            {dataset.id}
             <Button
               variant="ghost"
               size="icon"
@@ -37,7 +38,7 @@ const Filelist = ({
             </Button>
           </div>
           <div className="ml-2">
-            <UploadForm dataset={dataset} />
+            <UploadForm dataset={dataset} type="Upload" />
           </div>
         </div>
       ))}

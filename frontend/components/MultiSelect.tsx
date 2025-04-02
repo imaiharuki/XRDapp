@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { X } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import {
   Command,
   CommandEmpty,
@@ -61,13 +60,17 @@ export function MultiSelect({
   }));
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={setOpen} modal={true}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
           role="combobox"
           aria-expanded={open}
           className={cn("w-full justify-between", className)}
+          onClick={(e) => {
+            e.stopPropagation();
+            setOpen(!open);
+          }}
         >
           <div className="flex flex-wrap gap-1">
             {selected.length > 0 ? (
@@ -85,13 +88,11 @@ export function MultiSelect({
                       tabIndex={0}
                       className="ml-1 cursor-pointer"
                       onClick={(e) => {
-                        e.preventDefault();
                         e.stopPropagation();
                         handleUnselect(item);
                       }}
                       onKeyDown={(e) => {
                         if (e.key === "Enter") {
-                          e.preventDefault();
                           handleUnselect(item);
                         }
                       }}
@@ -116,7 +117,10 @@ export function MultiSelect({
               {options.map((option) => (
                 <CommandItem
                   key={option.value}
-                  onSelect={() => handleSelect(option.value)}
+                  onSelect={() => {
+                    handleSelect(option.value);
+                    setOpen(true);
+                  }}
                 >
                   <div
                     className={cn(
