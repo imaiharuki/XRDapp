@@ -27,7 +27,6 @@ const Filelist = ({
         <div key={dataset.id} className="flex items-center justify-between">
           <div className="flex items-center bg-gray-100 rounded-full px-3 py-1 justify-between">
             <span className="text-sm">{dataset.fileName}</span>
-            {dataset.id}
             <Button
               variant="ghost"
               size="icon"

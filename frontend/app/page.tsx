@@ -131,6 +131,7 @@ export default function Home() {
                 <Input
                   type="number"
                   placeholder="Θ-min"
+                  value={xMin}
                   onChange={(e) => setXMin(Number(e.target.value))}
                 />
               </div>
@@ -139,6 +140,7 @@ export default function Home() {
                 <Input
                   type="number"
                   placeholder="Θ-max"
+                  value={xMax}
                   onChange={(e) => setXMax(Number(e.target.value))}
                 />
               </div>

@@ -20,6 +20,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
+import { useToast } from "@/hooks/use-toast";
 
 export interface FetchXRDData {
   id: number;
@@ -78,6 +79,7 @@ export const columns = ({
     id: "actions",
     cell: ({ row }) => {
       const data = row.original;
+      const { toast } = useToast()
 
       const FormattedDate = new Date(data.upload_date)
         .toISOString()
@@ -116,7 +118,13 @@ export const columns = ({
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem
-              onClick={handleSelect}
+              onClick={() => {
+                handleSelect();
+                toast({
+                  title: "DATA SELECTED",
+                  description: "データが選択されました"
+                })
+              }}
               className="text-blue-600 justify-center font-bold"
             >
               SELECT

@@ -37,6 +37,7 @@ import {
 import { Input } from "./ui/input";
 import { MultiSelect } from "./MultiSelect";
 import { XRDDataset } from "@/app/page";
+import { useToast } from "@/hooks/use-toast";
 
 const FormSchema = z.object({
   username: z.string().min(1, {
@@ -74,6 +75,7 @@ const UploadForm = ({
   const [pendingData, setPendingData] = useState<z.infer<
     typeof FormSchema
   > | null>(null);
+  const {toast} = useToast()
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -178,6 +180,11 @@ const UploadForm = ({
 
       console.log("新規データ作成モード");
       await handleSubmitRequest(data, false);
+      
+      toast({
+        title: "DATA UPLOAD",
+        description: "データがアップロードされました"
+      })
     } catch (error) {
       console.error("エラーが発生しました:", error);
       let errorMessage = "不明なエラーが発生しました";
