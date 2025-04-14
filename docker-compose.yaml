@@ -6,17 +6,21 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: xrd-frontend
-    ports:
-      - "3000:3000"
+    # プロキシのnginxからのアクセスなので公開不要
+    # ports:
+    #   - "3000:3000"
     volumes:
       - ./frontend:/app
       - /app/node_modules
       - /app/.next
     environment:
+      # 本番環境ではproductionに変更
       - NODE_ENV=development
+      # 開発時のホットリロード設定(本番では不要)
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
     restart: unless-stopped
+    # 本番ではnpm run build && npm startに変更
     command: npm run dev
 
   backend:
@@ -24,8 +28,9 @@ services:
       context: .
       dockerfile: backend/Dockerfile
     container_name: xrd-backend
-    ports:
-      - "8000:8000"
+    # プロキシのnginxからのみアクセスするので公開不要
+    # ports:
+    #   - "8000:8000"
     volumes:
       - ./backend:/app
     environment:
@@ -42,8 +47,22 @@ services:
       TZ: "Asia/Tokyo"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    # backendからのみアクセスするので公開不要
+    # ports:
+    #   - 5432:5432
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: xrd-nginx
     ports:
-      - 5432:5432
+      - "80:80"
+
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro # readonly
+    depends_on:
+      - frontend
+      - backend
+    restart: unless-stopped
 
 volumes:
   postgres_data:
