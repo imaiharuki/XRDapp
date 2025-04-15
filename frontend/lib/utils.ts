@@ -76,16 +76,13 @@ export const EXCELexporter = (data: FetchXRDData) => {
 
 export const DeleteData = async (dataId: number) => {
   try {
-    const response = await fetch(
-      `http://localhost:8000/api/v1/delete?id=${dataId}`,
-      {
-        method: "DELETE",
-        headers: {
-          Accept: "application/json",
-        },
-        credentials: "include",
-      }
-    );
+    const response = await fetch(`api/v1/delete?id=${dataId}`, {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+      },
+      credentials: "include",
+    });
 
     if (!response.ok) {
       const errorData = await response.json();

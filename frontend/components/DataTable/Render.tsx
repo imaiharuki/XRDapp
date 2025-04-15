@@ -19,7 +19,7 @@ interface DataRenderProps {
 
 const getData = async (): Promise<FetchXRDData[]> => {
   try {
-    const response = await fetch("http://localhost:8000/api/v1/get", {
+    const response = await fetch("api/v1/get", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

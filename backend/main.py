@@ -18,7 +18,7 @@ app.add_middleware(
 )
 
 # XRDデータルーターの登録
-app.include_router(XRDData.router, prefix="/api/v1", tags=["XRD Data"])
+app.include_router(XRDData.router, prefix="/v1", tags=["XRD Data"])
 
 
 @app.get("/health")

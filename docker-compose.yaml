@@ -28,7 +28,7 @@ services:
       context: .
       dockerfile: backend/Dockerfile
     container_name: xrd-backend
-    # プロキシのnginxからのみアクセスするので公開不要
+    # プロキシのnginxからのみアクセスするのでapiの設定を直して未公開にしたい
     # ports:
     #   - "8000:8000"
     volumes:

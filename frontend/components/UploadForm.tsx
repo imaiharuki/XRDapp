@@ -111,8 +111,8 @@ const UploadForm = ({
     };
 
     const endpoint = exists
-      ? `http://localhost:8000/api/v1/update?id=${dataset.id}`
-      : "http://localhost:8000/api/v1/upload";
+      ? `api/v1/update?id=${dataset.id}`
+      : "api/v1/upload";
     const method = exists ? "PUT" : "POST";
 
     const response = await fetch(endpoint, {
@@ -151,7 +151,7 @@ const UploadForm = ({
       if (typeof dataset.id === "number") {
         console.log("IDチェック開始:", dataset.id);
         const checkResponse = await fetch(
-          `http://localhost:8000/api/v1/identity_check?id=${dataset.id}`,
+          `api/v1/identity_check?id=${dataset.id}`,
           {
             method: "GET",
             headers: {
